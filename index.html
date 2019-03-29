@@ -1,0 +1,221 @@
+
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+
+<div style="height: 5%; width: 100%; display: flex;">
+  <button onclick="parkView()" style="height: 100%; width: 50%;">公园视角</button>
+  <button onclick="flowerView()" style="height: 100%; width: 50%;">花视角</button>
+</div>
+<div id="timeline" chtt="公园赏花时间" style="height: 95%"></div>
+<textarea id="flower-time" style="height: 300px; width: 100%">
+一、颐和园
+梅花 4月1日-5月1日
+迎春、山桃、山杏 3月-4月初
+玉兰、西府海棠 3月中旬-4月中旬
+连翘、碧桃 3月下旬-5月初
+丁香 4月初-5月初
+二、天坛公园
+二月兰 4月下旬-5月上旬
+杏林 4月上旬
+丁香 5月中旬
+月季 5月中旬-10月下旬
+三、北海公园
+迎春、连翘、玉兰、白丁香、紫丁香 3月下旬-4月中旬
+暴马丁香 5月下旬-6月中旬
+山桃 3月中旬
+宋春 3月下旬
+榆叶梅 3月下旬-4月上旬
+粉玉兰、黄玉兰、贴梗海棠、紫叶李、碧桃、美人梅 4月上中旬
+牡丹、芍药、猥实、天目琼花、太平花、金银木、黄刺玫、木本绣球 4月下旬-5月上旬
+寿星桃、西府海棠、紫藤、紫荆、垂丝海棠 4月中下旬
+四、香山公园
+腊梅 2月底—3月初
+梅花 4月上旬
+杏花 4月中旬
+丁香 4月底—5月初
+花毛茛 4月中旬—5月中旬
+五、陶然亭公园
+西府海棠、现代海棠、碧桃、山桃、连翘、迎春等 3月中旬-4月中旬
+牡丹 4月下旬-5月上旬
+六、玉渊潭公园
+樱花 3月下旬-4月下旬
+海棠 4月中旬-5月中旬
+七、中山公园
+山桃、迎春、连翘、梅花 3月下旬-4月上旬
+海棠 4月中下旬
+芍药 5月上中旬
+牡丹 4月中旬-5月
+郁金香 4月-5月
+八、植物园
+山桃、玉兰 3月下旬-4月上旬
+梅花、郁金香 4月中下旬
+碧桃 4月
+丁香 4月中上旬
+海棠 4月中旬
+牡丹 4月下旬
+芍药 5月中上旬
+月季 5月中旬
+九、景山公园
+牡丹、芍药 4月-5月中旬
+十、紫竹院公园
+山桃 3月下旬-4月上旬
+连翘、榆叶梅、美人梅 4月上中旬
+丁香4月中下旬
+牡丹、锦带、黄刺玫、猬实 4月下旬-5月上旬
+十一、大观园
+榆叶梅、碧桃、牡丹 4月-5月
+杏树 3月
+十二、奥林匹克森林公园
+山桃、玉兰 3月下旬-4月上旬
+山杏 4月上旬
+连翘 3月下旬-4月中旬
+榆叶梅、樱花 4月上中旬
+海棠、黄刺玫 4月-5月上旬
+碧桃、丁香 4月
+绣线菊 4月-6月
+鸢尾 4月下旬-5月
+二月兰 4月-5月
+十三、元大都遗址公园
+西府海棠、八棱海棠、北美海棠 4月上中旬
+十四、圆明园遗址公园
+牡丹 4月中下旬-5月初
+芍药 5月上旬-5月下旬
+杏花 3月下旬-4月中旬
+迎春 3月中旬-4月中旬
+桃花 3月中旬-5月上旬
+抱茎苦卖菜 5月上旬-5月下旬
+二月兰 3月下旬-5月中下旬
+文冠果 4月中旬-5月上旬
+紫花地丁 3月-5月
+西府海棠 4月初
+蒲公英 3月-6月 
+榆叶梅 3月-4月
+丁香 4月
+十五、北京园博园
+樱花 3月下旬—4月中旬
+牡丹 4月下旬—5月上旬
+丁香 4月—6月
+紫薇 6月—9月
+月季 5月—11月
+十六、八达岭景区
+山杏、山桃 4月1日-5月12日
+</textarea>
+<script type="text/javascript">
+  
+  google.charts.load("current", {packages:["timeline"]});
+  google.charts.setOnLoadCallback(drawChart);
+  let rows = [];
+  var chart = undefined;
+  var dataTable = undefined;
+  var dataTable2 = undefined;
+  let flower_rows = [];
+  var options = undefined;
+
+  function parkView() {
+    chart.draw(dataTable, options);
+  }
+
+  function flowerView() {
+    chart.draw(dataTable2, options);
+  }
+
+  function drawChart() {
+    let flower = document.getElementById('flower-time').value;
+    
+    let park_reg = /[一二三四五六七八九十]+、(.+)/;
+    let flower_time_reg = /([^ ]+) ([^ ]+)/;
+    let time_to_time_reg = /(.*)[\-—](.*)/;
+    let this_park = '';
+    let month_day_reg = /^(\d+)月(\d+)日$/;
+    let month_xun_reg = /^(\d+)月([上中下]+)旬$/;
+    let month_xun2_reg = /^(\d+)月(初|末|中|底)$/;
+    let month_reg = /^(\d+)月$/;
+
+    let lines = flower.split('\n');
+    function new_date(m, d) {
+      return new Date(new Date().getFullYear(), parseInt(m) - 1, parseInt(d), 0,0,0);
+    }
+
+    function extract_time(time_string) {
+      if (time_to_time_reg.test(time_string)) {
+        let res = time_to_time_reg.exec(time_string);
+        let [p1, p2] = [extract_time(res[1]), extract_time(res[2])];
+        return [p1[0], p2[1]]
+      } else if (month_day_reg.test(time_string)) {
+        let res = month_day_reg.exec(time_string);
+        return [new_date(res[1], res[2]),
+                new_date(res[1], parseInt(res[2]) + 1)]
+      } else if (month_xun_reg.test(time_string) || month_xun2_reg.test(time_string)) {
+        let nbe = {'初': [1, 11], '上': [1, 11], '中': [11, 21], '下': [21, undefined], '末': [21, undefined], '底': [21, undefined]};
+
+        let res = month_xun_reg.test(time_string) ? month_xun_reg.exec(time_string) : month_xun2_reg.exec(time_string);
+
+        let xun = res[2];
+        if (xun === '中上') {
+          return [new_date(parseInt(res[1]), nbe['上'][0]),new_date(parseInt(res[1]), nbe['中'][1])]
+        }
+        let begin = new_date(res[1], nbe[xun[0]][0]);
+        if (['下', '末', '底'].includes(xun[xun.length - 1])) {
+          let end = new_date(parseInt(res[1]) + 1, 1);
+          return [begin, end]
+        }
+        let end = new_date(res[1], nbe[xun[xun.length - 1]][1]);
+        return [begin, end]
+      } else if (month_reg.test(time_string)) {
+        let res = month_reg.exec(time_string);
+        return [
+          new_date(res[1], 1),
+          new_date(parseInt(res[1]) + 1, 1),
+        ]
+      } else {
+        throw Error('no management of string ' + time_string)
+      }
+    }
+    
+
+    for (let line_id in lines) {
+      let line = lines[line_id].trim();
+      if (line === '')
+        continue;
+      if (park_reg.test(line)) {
+        let res = park_reg.exec(line);
+        this_park = res[1];
+      } else if (flower_time_reg.test(line)) {
+        let res = flower_time_reg.exec(line);
+        let se = extract_time(res[2]);
+        for (let flower_name of res[1].split('、')) {
+          flower_rows.push([flower_name, this_park, se[0], se[1]]);
+        }
+        rows.push([this_park, res[1], se[0], se[1]]);
+        console.log(this_park, res[1], res[2], se[0].toString(), se[1].toString());
+      }
+    }
+    flower_rows.sort(function (a, b) {
+       return a[3] - b[3];
+    })
+
+    var container = document.getElementById('timeline');
+    chart = new google.visualization.Timeline(container);
+    dataTable = new google.visualization.DataTable();
+    dataTable.addColumn({ type: 'string', id: 'Park' });
+    dataTable.addColumn({ type: 'string', id: 'FlowerType' });
+    dataTable.addColumn({ type: 'date', id: 'Start' });
+    dataTable.addColumn({ type: 'date', id: 'End' });
+    dataTable.addRows(rows);
+
+    dataTable2 = new google.visualization.DataTable();
+    dataTable2.addColumn({ type: 'string', id: 'FlowerType' });
+    dataTable2.addColumn({ type: 'string', id: 'Park' });
+    dataTable2.addColumn({ type: 'date', id: 'Start' });
+    dataTable2.addColumn({ type: 'date', id: 'End' });
+    dataTable2.addRows(flower_rows);
+
+    options = {
+      title: '北京市赏花地图',
+      timeline: { showRowLabels: true },
+      avoidOverlappingGridLines: false
+    };
+
+    chart.draw(dataTable, options);
+  }
+
+</script>
